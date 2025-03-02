@@ -70,3 +70,4 @@ If you're interested in collaborating on this project or have questions about th
 - Open an issue on this repository
 - Contact me through GitHub by opening a discussion in this repository
 - If you need to contact me privately, you can send a message through GitHub's messaging system
+- or you can reach me on LinkedIn at https://www.linkedin.com/in/gwiedeman/ 
