@@ -1,14 +1,11 @@
-Great. I will conduct research to develop a comprehensive framework for integrating centered set inference into AI alignment, fine-tuning, and adaptation. The research will cover:
-
-- **Foundational Theoretical Analysis** of centered set theory and its contrast with traditional alignment methods.
-- **Implementation-Focused Technical Documentation**, detailing AI architectures, fine-tuning strategies, algorithmic design, and pseudocode.
-- **Prototype Recommendations & Experimental Design**, including experiment setups, benchmarking strategies, and sandbox environments.
-- **Comparisons with Existing AI Models and Alignment Techniques**, such as OpenAI's GPT models, Anthropic's Constitutional AI, Meta’s Llama-3, and alignment methods like RLHF and contrastive learning.
-- **Scalability, Explainability, and Human-AI Interaction Considerations**, ensuring practical application and ethical robustness.
-
-I will deliver a mix of structured PDFs, interactive documents, and markdown-based documentation for clarity and usability. I will update you when the research is ready.
-
-# **Comprehensive Research Report**
+/*
+ * Centered Set Inference for AI Alignment
+ * Copyright (C) 2025 Gregory M. Wiedeman
+ * 
+ * This research is licensed under the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
 
 ## **Executive Summary**
 This research investigates a **centered set inference framework** for aligning advanced AI language models (“Alz” models) with human values and user intents. Unlike traditional **bounded set** approaches (which draw fixed boundaries between acceptable and unacceptable outputs) or **fuzzy set** approaches (which allow graded membership in categories), a centered set approach focuses on **directional alignment toward a “center”** – a set of core values or goals. The study explores how such a framework can be designed and integrated into model fine-tuning and alignment processes. Key findings and proposals include:

@@ -62,3 +62,11 @@ Key provisions:
 - Changes made to the code must be documented
 
 For more information about the GPL-3.0 license, visit: https://www.gnu.org/licenses/gpl-3.0.en.html
+
+## Contact
+
+If you're interested in collaborating on this project or have questions about the research, please:
+
+- Open an issue on this repository
+- Contact me through GitHub by opening a discussion in this repository
+- If you need to contact me privately, you can send a message through GitHub's messaging system
