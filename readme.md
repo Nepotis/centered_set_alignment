@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains research on applying centered set theory to AI alignment, fine-tuning, and adaptation. The core idea is to move beyond traditional "bounded set" approaches to AI alignment (which draw fixed boundaries between acceptable and unacceptable outputs) toward a "centered set" approach that focuses on directional alignment toward core values.
+This repository contains research (and hopefully soon some prototype code) on applying centered set theory to AI alignment, fine-tuning, and adaptation. The core idea is to move beyond traditional "bounded set" approaches to AI alignment (which draw fixed boundaries between acceptable and unacceptable outputs) toward a "centered set" approach that focuses on directional alignment toward core values.
 
 ## The Concept
 
