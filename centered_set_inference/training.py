@@ -31,6 +31,10 @@ class AlignmentDataset(Dataset):
         self.model = model
         self.max_length = max_length
         
+        # Fix for tokenizers without pad_token
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        
         # Load data
         with open(data_path, 'r') as f:
             self.data = json.load(f)

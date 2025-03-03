@@ -76,6 +76,10 @@ def load_or_train_model(args):
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     model = AutoModelForCausalLM.from_pretrained(args.model_name)
     
+    # Fix for tokenizers without pad_token
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    
     # Define value center
     value_center = ValueCenter({
         "empathy": 1.0,

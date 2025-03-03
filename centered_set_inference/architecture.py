@@ -220,10 +220,16 @@ class CenteredSetInferenceEngine:
     def _generate_response(self, prompt: str) -> str:
         """Generate a response using the language model."""
         inputs = self.tokenizer(prompt, return_tensors="pt")
+        
+        # Ensure pad_token is set
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        
         outputs = self.language_model.generate(
             **inputs,
             max_length=512,
             temperature=0.7,
-            do_sample=True
+            do_sample=True,
+            pad_token_id=self.tokenizer.pad_token_id
         )
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True) 
