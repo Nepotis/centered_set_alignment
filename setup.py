@@ -13,7 +13,9 @@ setup(
         "seaborn>=0.11.0",
         "scikit-learn>=0.24.0",
         "gradio>=2.9.0",
-        "pandas>=1.3.0"
+        "pandas>=1.3.0",
+        "sentence-transformers>=2.2.0",
+        "psutil>=5.9.0"
     ],
     author="Gregory M. Wiedeman",
     author_email="gwiedeman@live.com",
