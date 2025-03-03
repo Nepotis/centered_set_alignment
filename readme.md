@@ -1,73 +1,101 @@
 # Centered Set Inference for AI Alignment
 
+This repository contains a proof-of-concept implementation of the Centered Set Inference framework for AI alignment, as described in the research paper "Centered Set Inference for AI Alignment".
+
 ## Overview
 
-This repository contains research (and hopefully soon some prototype code) on applying centered set theory to AI alignment, fine-tuning, and adaptation. The core idea is to move beyond traditional "bounded set" approaches to AI alignment (which draw fixed boundaries between acceptable and unacceptable outputs) toward a "centered set" approach that focuses on directional alignment toward core values. It could theoretically work alone or in conjunction with the traditional "bounded set" approaches to better replicate the human ideal of having both values and rules as guides to behavior and work product.
+The Centered Set Inference Engine (CSIE) is a novel approach to AI alignment that focuses on directional alignment toward a "center" of core values, rather than enforcing fixed boundaries between acceptable and unacceptable outputs. This approach enables:
 
-## The Concept
+- **Continuous adaptation** to evolving values
+- **Granular feedback** on multiple value dimensions
+- **Trajectory-based evaluation** that considers movement toward or away from ideals
+- **Improved long-term safety** through focus on core principles rather than specific rules
 
-In a centered set approach to AI alignment:
+## Installation
 
-- Instead of defining rigid boundaries of acceptable behavior, we define a "center" consisting of core values or ideals
-- The AI's outputs are evaluated based on how close they are to this center and in which direction they're moving
-- Alignment becomes a continuous process where the model aims to decrease the distance between its behavior and the ideal center
-- The "center" can be adjusted over time as human values evolve, making this inherently a dynamic alignment approach
+```bash
+# Clone the repository
+git clone https://github.com/nepotis/centered-set-inference.git
+cd centered-set-inference
 
-This approach could help create AI systems that:
-- Adapt more gracefully to evolving ethical values and user needs
-- Navigate complex trade-offs between different values (like helpfulness vs. safety)
-- Provide more nuanced responses instead of defaulting to refusals when near boundaries
-- Maintain alignment even in novel situations not seen during training
+# Install the package
+pip install -e .
+```
 
-## Why This Repository Exists
+## Usage
 
-I'm sharing this research to invite collaboration and feedback. As a systems thinker who works with patterns, I've developed this conceptual framework but lack:
+### Running the Therapeutic Chatbot Demo
 
-1. The technical expertise to implement all the nuanced details
-2. The resources to test and iterate on implementations
-3. The specialized knowledge to determine how this approach would interact with current AI alignment techniques
+The simplest way to try out the framework is to run the therapeutic chatbot demo:
 
-My hope is that by making this research public, others with complementary skills and resources might find value in these ideas and help develop them further.
+```bash
+python -m centered_set_inference.main --chatbot
+```
 
-## Contents
+This will:
+1. Generate synthetic training data if it doesn't exist
+2. Load or train the alignment head
+3. Launch a Gradio interface for interacting with the chatbot
 
-- [research.md](research.md): A comprehensive research report on centered set inference for AI alignment, including:
-  - Theoretical framework and comparison with traditional approaches
-  - Proposed architecture for a Centered Set Inference Engine
-  - Fine-tuning mechanisms and integration with existing methods
-  - Ethical and philosophical implications
-  - Prototype recommendations and experimental designs
+### Training the Alignment Head
 
-## Contributing
+To explicitly train or retrain the alignment head:
 
-If you find these ideas interesting and want to collaborate, please:
-- Open issues for discussion of specific aspects
-- Submit pull requests if you have improvements to the research
-- Reach out if you're interested in implementing prototypes based on this framework
+```bash
+python -m centered_set_inference.main --retrain --epochs 5
+```
 
-## Background
+### Running Benchmarks
 
-I've been researching this concept for months, trying to develop the necessary skillset to implement it. However, I realized that waiting until I had all the expertise might take years, and I wanted to see what others think of this approach now.
+To evaluate the framework on test prompts:
+
+```bash
+python -m centered_set_inference.main --benchmark
+```
+
+This will generate visualizations and statistics in the `results/` directory.
+
+### Advanced Options
+
+```bash
+python -m centered_set_inference.main --help
+```
+
+## Framework Components
+
+- **ValueCenter**: Defines the core values and their relative weights
+- **AlignmentHead**: Neural network that evaluates outputs along value dimensions
+- **CenteredSetInferenceEngine**: Main engine that guides generation toward the center
+
+## Example Use Cases
+
+The current implementation focuses on a therapeutic chatbot, but the framework can be extended to other domains such as:
+
+- Educational tutoring
+- Collaborative brainstorming
+- Coding assistance
+
+## Limitations
+
+This is a proof-of-concept implementation with several limitations:
+
+- Uses synthetic data rather than human-annotated examples
+- Limited to smaller models due to computational constraints
+- Simplified value dimensions compared to a production system
+
+## Citation
+
+If you use this code in your research, please cite:
+
+```
+@article{wiedeman2025centered,
+  title={Centered Set Inference for AI Alignment},
+  author={Wiedeman, Gregory M.},
+  journal={Forthcoming},
+  year={2025}
+}
+```
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0) - see the [LICENSE](LICENSE) file for details.
-
-The GPL-3.0 is a "copyleft" license that requires anyone who distributes your code or derivative works to make the source available under the same terms. This ensures that all improvements and derivative works based on this research will remain open source and available to the community.
-
-Key provisions:
-- Anyone can freely use, modify, and distribute this work
-- All derivative works must also be released under the GPL-3.0
-- Source code must be made available when distributing the software
-- Changes made to the code must be documented
-
-For more information about the GPL-3.0 license, visit: https://www.gnu.org/licenses/gpl-3.0.en.html
-
-## Contact
-
-If you're interested in collaborating on this project or have questions about the research, please:
-
-- Open an issue on this repository
-- Contact me through GitHub by opening a discussion in this repository
-- If you need to contact me privately, you can send a message through GitHub's messaging system
-- or you can reach me on LinkedIn at https://www.linkedin.com/in/gwiedeman/ 
+This project is licensed under the GNU General Public License v3.0 - see the LICENSE file for details.
