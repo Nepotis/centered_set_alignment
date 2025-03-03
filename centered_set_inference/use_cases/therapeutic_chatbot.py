@@ -64,23 +64,27 @@ def create_chatbot_interface(engine: CenteredSetInferenceEngine, tokenizer):
     alignment_history = []
     
     def respond(message, history):
-        # Format prompt with history
-        formatted_history = ""
-        for user_msg, bot_msg in history:
-            formatted_history += f"User: {user_msg}\nBot: {bot_msg}\n"
-        
-        prompt = f"{formatted_history}User: {message}\nBot:"
-        
-        # Generate response
-        response, scores = engine.generate_aligned_response(prompt)
-        
-        # Store alignment scores
-        alignment_history.append(scores)
-        
-        # Update conversation history
-        conversation_history.append((message, response))
-        
-        return response
+        try:
+            # Format prompt with history
+            formatted_history = ""
+            for user_msg, bot_msg in history:
+                formatted_history += f"User: {user_msg}\nBot: {bot_msg}\n"
+            
+            prompt = f"{formatted_history}User: {message}\nBot:"
+            
+            # Generate response
+            response, scores = engine.generate_aligned_response(prompt)
+            
+            # Store alignment scores
+            alignment_history.append(scores)
+            
+            # Update conversation history
+            conversation_history.append((message, response))
+            
+            return response
+        except Exception as e:
+            print(f"Error in respond function: {e}")
+            return "I apologize, but I encountered an error. Please try again with a different message."
     
     def show_alignment_scores():
         """Create a visualization of alignment scores over the conversation."""

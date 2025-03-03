@@ -179,57 +179,89 @@ class CenteredSetInferenceEngine:
         Returns:
             Tuple of (final_response, alignment_scores)
         """
-        # First attempt
-        response = self._generate_response(prompt)
-        scores = self.evaluate_response(prompt, response)
-        
-        # If alignment is sufficient, return
-        if scores["overall"] >= self.min_acceptable_score:
-            return response, scores
-        
-        # Otherwise, try to improve (up to max_attempts)
-        for attempt in range(max_attempts - 1):
-            # Create a guidance prompt based on low-scoring values
-            low_values = [name for name, score in scores.items() 
-                         if name != "overall" and score < self.min_acceptable_score]
+        try:
+            # First attempt
+            response = self._generate_response(prompt)
+            scores = self.evaluate_response(prompt, response)
             
-            if not low_values:
-                # If no specific low values but overall is low, try general improvement
-                guidance = "Please provide a more helpful and appropriate response."
-            else:
-                guidance = f"Please revise your response to be more {', '.join(low_values)}."
+            # If alignment is sufficient, return
+            if scores["overall"] >= self.min_acceptable_score:
+                return response, scores
             
-            # Generate improved response
-            improved_prompt = f"{prompt}\n\nYour previous response: {response}\n\n{guidance}"
-            improved_response = self._generate_response(improved_prompt)
-            
-            # Evaluate the improved response
-            improved_scores = self.evaluate_response(prompt, improved_response)
-            
-            # If improved, update response and scores
-            if improved_scores["overall"] > scores["overall"]:
-                response = improved_response
-                scores = improved_scores
+            # Otherwise, try to improve (up to max_attempts)
+            for attempt in range(max_attempts - 1):
+                # Create a guidance prompt based on low-scoring values
+                low_values = [name for name, score in scores.items() 
+                             if name != "overall" and score < self.min_acceptable_score]
                 
-                # If good enough, return
-                if scores["overall"] >= self.min_acceptable_score:
-                    break
-        
-        return response, scores
+                if not low_values:
+                    # If no specific low values but overall is low, try general improvement
+                    guidance = "Please provide a more helpful and appropriate response."
+                else:
+                    guidance = f"Please revise your response to be more {', '.join(low_values)}."
+                
+                # Create a simplified prompt for improvement to avoid token length issues
+                # Just use the last exchange rather than the full history
+                simplified_prompt = f"User message: {prompt.split('User:')[-1].strip()}\n\nYour previous response: {response}\n\n{guidance}"
+                
+                # Generate improved response
+                improved_response = self._generate_response(simplified_prompt)
+                
+                # Evaluate the improved response
+                improved_scores = self.evaluate_response(prompt, improved_response)
+                
+                # If improved, update response and scores
+                if improved_scores["overall"] > scores["overall"]:
+                    response = improved_response
+                    scores = improved_scores
+                    
+                    # If good enough, return
+                    if scores["overall"] >= self.min_acceptable_score:
+                        break
+            
+            return response, scores
+        except Exception as e:
+            print(f"Error in generate_aligned_response: {e}")
+            default_scores = {name: 0.5 for name in self.value_center.get_value_names()}
+            default_scores["overall"] = 0.5
+            return "I apologize, but I'm having difficulty generating a proper response at the moment.", default_scores
     
     def _generate_response(self, prompt: str) -> str:
         """Generate a response using the language model."""
-        inputs = self.tokenizer(prompt, return_tensors="pt")
-        
-        # Ensure pad_token is set
-        if self.tokenizer.pad_token is None:
-            self.tokenizer.pad_token = self.tokenizer.eos_token
-        
-        outputs = self.language_model.generate(
-            **inputs,
-            max_length=512,
-            temperature=0.7,
-            do_sample=True,
-            pad_token_id=self.tokenizer.pad_token_id
-        )
-        return self.tokenizer.decode(outputs[0], skip_special_tokens=True) 
+        try:
+            # Tokenize the prompt
+            tokens = self.tokenizer.encode(prompt)
+            
+            # If the prompt is too long, truncate it
+            max_input_length = 400  # Leave room for generation
+            if len(tokens) > max_input_length:
+                # Keep the beginning and end of the prompt, removing the middle if needed
+                # This preserves the latest context and the initial instructions
+                beginning = tokens[:max_input_length//2]
+                end = tokens[-max_input_length//2:]
+                tokens = beginning + end
+                prompt = self.tokenizer.decode(tokens)
+                print(f"Prompt was truncated from {len(tokens)} tokens to {max_input_length} tokens")
+            
+            # Now tokenize the possibly truncated prompt
+            inputs = self.tokenizer(prompt, return_tensors="pt")
+            
+            # Ensure pad_token is set
+            if self.tokenizer.pad_token is None:
+                self.tokenizer.pad_token = self.tokenizer.eos_token
+            
+            # Use max_new_tokens instead of max_length
+            outputs = self.language_model.generate(
+                **inputs,
+                max_new_tokens=150,  # Generate up to 150 new tokens
+                temperature=0.7,
+                do_sample=True,
+                pad_token_id=self.tokenizer.pad_token_id,
+                num_return_sequences=1,
+                no_repeat_ngram_size=3,  # Prevent repetition
+                early_stopping=True  # Stop when EOS is generated
+            )
+            return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        except Exception as e:
+            print(f"Error generating response: {e}")
+            return "I apologize, but I'm having trouble generating a response right now. Could you try a simpler question or phrase it differently?" 
